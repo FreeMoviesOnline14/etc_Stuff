@@ -1,0 +1,61 @@
+Steps to convert decimal floating point to binary floating:
+
+e.g. 34.2342 base 10
+
+Step #1:
+- determine the sign of the given. That will be the sign bit. Postive sign has a "0" bit while negative has a "1" bit.
+
+Step #2:
+
+- convert the whole number part to binary (i.e. 34 base 10 --> ? base 2)
+
+Step #3:
+- convert fractional part to binary 
+  (i.e. Step 3.1: multiply the fractional part by 2. If the result result contains a 1 in ones place, then bit is 1.
+   Else, bit is zero. Then, take the current fractional part of the result and repeat Step 3.1 until fractional
+   part becomes 0.)
+
+At this point we have the sign bit, whole part to binary, and fractional part to binary.
+
+Step #4:
+- merge the converted whole part with the converted fractional part, preserving the point (i.e. dot between the converted whole and converted fractional)
+- move the binary point (i.e. dot) to the left most after the first "1" bit. Make sure to keep track of how many
+  time you move the binary point because the count will be your "exponent".
+  e.g. 1111.1010 --> 1.1111010 x 2 ^ 3 or equivalent to 1.1111010E03 where E stands for "x base" where base 
+       depends on the number system you want to represent. For example binary have base 2, so it will be "x 2".
+
+Step #5:
+- convert the exponent to binary. e.g. exponent 5 base 10 --> 0101
+
+Step #6:
+- save the sign bit, exponent, mantissa. (i.e. list it all those three).
+
+Step #7:
+- map out all those three to their respective bit place according IEEE 754. 
+
+i.e. 
+
+The first 23 bits for the mantissa zero extend as needed.
+The next 8 bits for the exponent zero extend as needed.
+The last bit, the MSD (Most Significant Digit) is the sign bit. Either 0 or 1.
+
+
+Using biased exponent:
+
+Actual exponent can be calculated by subtracting a constant 127 from the given biased exponent.
+
+e.g. biasedExponent = 126
+     actualExponent = biasedExponent - 127 = -1
+
+127 - 127 = 0;
+254 - 127 = 127
+
+The range of an 8-bit "Actual" exponent is from -126 to 127. 
+The range of biased exponent is from 1 to 254.
+
+So, a biased exponent of 1 will give "Actual" exponent of -126.
+251 will give "Actual" exponent of 127.
+
+There are two types of special exponent:
+- zero exponent which is 0000 0000.
+- infinity or Nan (Not a number) which is 1111 1111. Don't confuse this with -1!
